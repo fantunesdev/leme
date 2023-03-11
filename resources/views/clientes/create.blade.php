@@ -12,7 +12,7 @@
         </div>
         <div class="mb-3">
             <label for="cpf" class="form-label">CPF</label>
-            <input type="text" class="form-control" id="cpf" name="cpf" placeholder="Digite o CPF" required>
+            <input type="text" class="form-control" id="cpf" name="cpf" placeholder="Digite o CPF" required maxlength="11" minlength="11">
         </div>
         <div class="mb-3">
             <label for="data_nasc" class="form-label">Data de nascimento</label>
