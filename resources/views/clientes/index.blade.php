@@ -34,11 +34,11 @@
                         @endif
                     </td>
                     <td scope="row">
-                        <a class="btn btn-primary" href="{{ route('clientes.edit', $cliente) }}">Editar</a>
+                        <a class="btn btn-dark" href="{{ route('clientes.edit', $cliente) }}"><i class="fa-solid fa-pen-to-square"></i></a>
                         <form action="{{ route('clientes.destroy', $cliente) }}" method="POST" style="display: inline">
                             @method('DELETE')
                             @csrf
-                            <button class="btn btn-danger" type="submit" onclick="return confirm('Tem certeza que deseja apagar? Esta operação é irreversível')">Apagar</button>
+                            <button class="btn btn-danger" type="submit" onclick="return confirm('Tem certeza que deseja apagar? Esta operação é irreversível')"><i class="fa-solid fa-trash"></i></button>
                         </form>
                     </td>
                 </tr>
