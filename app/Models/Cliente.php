@@ -10,4 +10,13 @@ class Cliente extends Model
     use HasFactory;
 
     protected $fillable = ['nome', 'cpf', 'data_nasc', 'telefone', 'ativo'];
+
+    /**
+     * Define a relação com Pedido
+     *
+     * @return void
+     */
+    public function pedidos() {
+        return $this->hasMany(Pedido::class);
+    }
 }

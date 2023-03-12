@@ -18,6 +18,9 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{{ route('clientes.index') }}">Clientes</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ route('pedidos.index') }}">Pedidos</a>
+                    </li>
                 </ul>
                 </div>
             </div>
