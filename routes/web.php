@@ -21,3 +21,5 @@ Route::get('/', function () {
 
 Route::resource('clientes', ClienteController::class);
 Route::resource('pedidos', PedidoController::class);
+
+Route::get('export_csv', [PedidoController::class, 'export_csv'])->name('pedidos.export_csv');

@@ -133,4 +133,40 @@ class PedidoController extends Controller
 
         return redirect('/pedidos');
     }
+
+    public function export_csv() {
+        $arquivo = 'pedidos.csv';
+        $pedidos = Pedido::all();
+
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$arquivo",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $colunas = array('id', 'Produto', 'valor', 'Data', 'Ativo', 'Cliente', 'Status');
+
+        $callback = function() use($pedidos, $colunas) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $colunas);
+
+            foreach ($pedidos as $pedido) {
+                $row['id']  = $pedido->id;
+                $row['Produto']    = $pedido->produto;
+                $row['Valor']    = $pedido->valor;
+                $row['Data']    = $pedido->data;
+                $row['Ativo']  = $pedido->ativo;
+                $row['Cliente']  = $pedido->cliente->nome;
+                $row['Status']  = $pedido->pedido_status->descricao;
+
+                fputcsv($file, array($row['id'], $row['Produto'], $row['Valor'], $row['Data'], $row['Ativo'], $row['Cliente'], $row['Status']));
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }

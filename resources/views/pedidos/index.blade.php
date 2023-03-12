@@ -5,7 +5,8 @@
 
 
 @section('conteudo')
-        <a class="btn btn-dark" href="{{ route('pedidos.create') }}">Novo Pedido</a><br><br>
+        <a class="btn btn-dark" href="{{ route('pedidos.create') }}">Novo Pedido</a>
+        <a class="btn btn-dark" href="{{ route('pedidos.export_csv') }}">Exportar CSV</a><br><br>
         <table class="table">
             <thead>
                 <tr>
