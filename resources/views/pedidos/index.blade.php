@@ -12,7 +12,7 @@
                     <th scope="col">ID</th>
                     <th scope="col">Produto</th>
                     <th scope="col">Valor</th>
-                    <th scope="col">Data de nascimento</th>
+                    <th scope="col">Data</th>
                     <th scope="col">Ativo</th>
                     <th scope="col">Cliente</th>
                     <th scope="col">Status</th>
