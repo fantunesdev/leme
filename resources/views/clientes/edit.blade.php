@@ -7,6 +7,15 @@
     <form action="{{ route('clientes.update', $cliente) }}" method="POST">
         @csrf
         @method('PUT')
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="mb-3">
             <label for="nome" class="form-label">Nome</label>
             <input type="text" value="{{ $cliente->nome }}" class="form-control" id="nome" name="nome" placeholder="Digite o nome" required>

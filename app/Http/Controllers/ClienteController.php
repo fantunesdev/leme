@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ClienteRequest;
 use App\Models\Cliente;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -28,7 +29,7 @@ class ClienteController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse {
+    public function store(Request $request, ClienteRequest $cliente_request): RedirectResponse {
         $dados = $request->except('_token');
 
         Cliente::create($dados);

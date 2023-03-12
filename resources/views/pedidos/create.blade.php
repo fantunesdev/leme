@@ -6,17 +6,26 @@
 @section('conteudo')
     <form action="{{ route('pedidos.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="mb-3">
             <label for="imagem" class="form-label">Imagem</label>
             <input type="file" class="form-control-file" id="imagem" name="imagem">
         </div>
         <div class="mb-3">
             <label for="produto" class="form-label">Produto</label>
-            <input type="text" class="form-control" id="produto" name="produto" placeholder="Digite o produto" required>
+            <input type="text" class="form-control" id="produto" name="produto" placeholder="Digite o produto" required value="{{ old('produto') }}">
         </div>
         <div class="mb-3">
             <label for="valor" class="form-label">Valor</label>
-            <input type="number" step="0.01" class="form-control" id="valor" name="valor" placeholder="0,00" required maxlength="11" minlength="11">
+            <input type="number" step="0.01" class="form-control" id="valor" name="valor" placeholder="0,00" required maxlength="11" minlength="11" value="{{ old('produto') }}">
         </div>
         <div class="mb-3">
             <label for="ativo" class="form-label">Ativo</label>

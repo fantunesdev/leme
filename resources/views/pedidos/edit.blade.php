@@ -7,6 +7,15 @@
     <form action="{{ route('pedidos.update', $pedido) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="mb-3">
             <label for="imagem" class="form-label">Imagem</label><br>
             @if (count($pedido->pedidos_imagens) > 0)
