@@ -5,6 +5,7 @@
 
 
 @section('conteudo')
+        <a class="btn btn-dark" href="{{ route('pedidos.create') }}">Novo Pedido</a><br><br>
         <table class="table">
             <thead>
                 <tr>
@@ -35,16 +36,15 @@
                     <td scope="row">{{ $pedido->cliente->nome }}</td>
                     <td scope="row">{{ $pedido->pedido_status->descricao }}</td>
                     <td scope="row">
-                        <a class="btn btn-primary" href="{{ route('pedidos.edit', $pedido) }}">Editar</a>
+                        <a class="btn btn-dark" href="{{ route('pedidos.edit', $pedido) }}"><i class="fa-solid fa-pen-to-square"></i></a>
                         <form action="{{ route('pedidos.destroy', $pedido) }}" method="POST" style="display: inline">
                             @method('DELETE')
                             @csrf
-                            <button class="btn btn-danger" type="submit" onclick="return confirm('Tem certeza que deseja apagar? Esta operação é irreversível')">Apagar</button>
+                            <button class="btn btn-danger" type="submit" onclick="return confirm('Tem certeza que deseja apagar? Esta operação é irreversível')"><i class="fa-solid fa-trash"></i></button>
                         </form>
                     </td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
-        <a class="btn btn-success" href="{{ route('pedidos.create') }}">Novo Pedido</a>
 @endsection

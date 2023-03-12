@@ -5,6 +5,7 @@
 
 
 @section('conteudo')
+        <a class="btn btn-dark" href="{{ route('clientes.create') }}">Novo Cliente</a><br><br>
         <table class="table">
             <thead>
                 <tr>
@@ -44,5 +45,4 @@
                 @endforeach
             </tbody>
         </table>
-        <a class="btn btn-success" href="{{ route('clientes.create') }}">Novo Cliente</a>
 @endsection
