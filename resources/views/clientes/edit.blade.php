@@ -26,8 +26,13 @@
         <div class="mb-3">
             <label for="ativo" class="form-label">Ativo</label>
             <select class="form-control" name="ativo" id="ativo" required>
-                <option value="1">Sim</option>
-                <option value="2">Não</option>
+                @foreach ($ativo_options as $key => $option)
+                <option value="{{ $key }}"
+                @if ($key == $cliente->ativo)
+                    selected
+                @endif
+                >{{ $option }}</option>
+                @endforeach
             </select>
         </div>
         <button class="btn btn-success" type="submit">Enviar</button>

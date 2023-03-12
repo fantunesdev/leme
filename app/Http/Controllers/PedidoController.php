@@ -22,10 +22,15 @@ class PedidoController extends Controller
     public function create(): View {
         $clientes = Cliente::get();
         $pedidos_status = PedidoStatus::get();
+        $ativo_options = [
+            '1' => 'Sim',
+            '2' => 'Não'
+        ];
 
         return view('pedidos.create', [
             'clientes' => $clientes,
-            'pedidos_status' => $pedidos_status
+            'pedidos_status' => $pedidos_status,
+            'ativo_options' => $ativo_options
         ]);
     }
 
@@ -42,11 +47,16 @@ class PedidoController extends Controller
         $pedido = Pedido::find($id);
         $clientes = Cliente::get();
         $pedidos_status = PedidoStatus::get();
+        $ativo_options = [
+            '1' => 'Sim',
+            '2' => 'Não'
+        ];
 
         return view('pedidos.edit', [
             'pedido' => $pedido,
             'clientes' => $clientes,
-            'pedidos_status' => $pedidos_status 
+            'pedidos_status' => $pedidos_status,
+            'ativo_options' => $ativo_options
         ]);
     }
 

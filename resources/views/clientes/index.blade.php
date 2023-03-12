@@ -25,7 +25,13 @@
                     <td scope="row">{{ $cliente->cpf }}</td>
                     <td scope="row">{{ date('d/m/Y', strtotime($cliente->data_nasc)) }}</td>
                     <td scope="row">{{ $cliente->telefone }}</td>
-                    <td scope="row">{{ $cliente->ativo }}</td>
+                    <td scope="row">
+                        @if ($cliente->ativo == '1')
+                        Sim
+                        @elseif ($cliente->ativo == 2)
+                        Não
+                        @endif
+                    </td>
                     <td scope="row">
                         <a class="btn btn-primary" href="{{ route('clientes.edit', $cliente) }}">Editar</a>
                         <form action="{{ route('clientes.destroy', $cliente) }}" method="POST" style="display: inline">

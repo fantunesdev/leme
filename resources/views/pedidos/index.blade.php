@@ -23,9 +23,15 @@
                 <tr>
                     <th scope="row">{{ $pedido->id }}</th>
                     <td scope="row">{{ $pedido->produto }}</td>
-                    <td scope="row">{{ $pedido->valor }}</td>
+                    <td scope="row">R$ {{ number_format($pedido->valor, 2, ',', '.') }}</td>
                     <td scope="row">{{ date('d/m/Y', strtotime($pedido->data)) }}</td>
-                    <td scope="row">{{ $pedido->ativo }}</td>
+                    <td scope="row">
+                        @if ($pedido->ativo == '1')
+                        Sim
+                        @elseif ($pedido->ativo == 2)
+                        Não
+                        @endif
+                    </td>
                     <td scope="row">{{ $pedido->cliente->nome }}</td>
                     <td scope="row">{{ $pedido->pedido_status->descricao }}</td>
                     <td scope="row">
@@ -40,5 +46,5 @@
                 @endforeach
             </tbody>
         </table>
-        <a class="btn btn-success" href="{{ route('pedidos.create') }}">Novo Cliente</a>
+        <a class="btn btn-success" href="{{ route('pedidos.create') }}">Novo Pedido</a>
 @endsection

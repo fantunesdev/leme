@@ -18,7 +18,14 @@ class ClienteController extends Controller
     }
 
     public function create(): View {
-        return view('clientes.create');
+        $ativo_options = [
+            '1' => 'Sim',
+            '2' => 'Não'
+        ];
+
+        return view('clientes.create', [
+            'ativo_options' => $ativo_options
+        ]);
     }
 
     public function store(Request $request): RedirectResponse {
@@ -31,9 +38,14 @@ class ClienteController extends Controller
 
     public function edit(int $id): View {
         $cliente = Cliente::findOrFail($id);
+        $ativo_options = [
+            '1' => 'Sim',
+            '2' => 'Não'
+        ];
 
         return view('clientes.edit', [
-            'cliente' => $cliente
+            'cliente' => $cliente,
+            'ativo_options' => $ativo_options
         ]);
     }
 
