@@ -50,7 +50,7 @@ class ClienteController extends Controller
         ]);
     }
 
-    public function update(int $id, Request $request): RedirectResponse {
+    public function update(int $id, Request $request, ClienteRequest $cliente_request): RedirectResponse {
         $cliente = Cliente::findOrFail($id);
 
         $cliente->update([
