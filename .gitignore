@@ -17,3 +17,5 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+public/img/pedidos/capa/*
+public/img/pedidos/imagem/*

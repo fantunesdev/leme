@@ -4,8 +4,12 @@
 @section('titulo', 'Cadastrar Pedido')
 
 @section('conteudo')
-    <form action="{{ route('pedidos.store') }}" method="POST">
+    <form action="{{ route('pedidos.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
+        <div class="mb-3">
+            <label for="imagem" class="form-label">Imagem</label>
+            <input type="file" class="form-control-file" id="imagem" name="imagem">
+        </div>
         <div class="mb-3">
             <label for="produto" class="form-label">Produto</label>
             <input type="text" class="form-control" id="produto" name="produto" placeholder="Digite o produto" required>

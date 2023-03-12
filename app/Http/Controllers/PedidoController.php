@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\Pedido;
+use App\Models\PedidosImagens;
 use App\Models\PedidoStatus;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -34,11 +35,28 @@ class PedidoController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse {
+    public function store(Request $request) {
         $dados = $request->except('_token');
         $dados['data'] = date('Y-m-d H:i:s');
-        
-        Pedido::create($dados);
+
+        $pedido = Pedido::create($dados);
+
+        if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
+            $request_imagem = $request->imagem;
+            $nome_original = pathinfo($request_imagem->getClientOriginalName(), PATHINFO_FILENAME);
+            $extensao = pathinfo($request_imagem->getClientOriginalName(), PATHINFO_EXTENSION);
+            $novo_nome = md5($nome_original . strtotime('now')) . '.' . $extensao;
+            $imagem_path = 'img/pedidos/imagem';
+            $capa_path = 'img/pedidos/capa';
+            $request_imagem->move($imagem_path, $novo_nome);
+
+            $pedidos_imagens = new PedidosImagens([
+                'pedido_id' => $pedido->id,
+                'imagem' => "$imagem_path/$novo_nome",
+                'capa' => "$capa_path/$novo_nome"
+            ]);
+            $pedidos_imagens->save();
+        }
 
         return redirect('/pedidos');
     }
@@ -60,7 +78,7 @@ class PedidoController extends Controller
         ]);
     }
 
-    public function update(int $id, Request $request): RedirectResponse {
+    public function update(int $id, Request $request) {
         $pedido = Pedido::findOrFail($id);
 
         $pedido->update([
@@ -71,11 +89,45 @@ class PedidoController extends Controller
             'pedido_status_id' => $request->pedido_status_id
         ]);
 
+        if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
+            $request_imagem = $request->imagem;
+            $nome_original = pathinfo($request_imagem->getClientOriginalName(), PATHINFO_FILENAME);
+            $extensao = pathinfo($request_imagem->getClientOriginalName(), PATHINFO_EXTENSION);
+            $novo_nome = md5($nome_original . strtotime('now')) . '.' . $extensao;
+            $imagem_path = 'img/pedidos/imagem';
+            $capa_path = 'img/pedidos/capa';
+            $request_imagem->move($imagem_path, $novo_nome);
+            
+            if (count($pedido->pedidos_imagens) > 0) {
+                unlink($pedido->pedidos_imagens[0]->imagem);
+                // unlink($pedido->pedidos_imagens[0]->capa);
+                $pedido_imagem = PedidosImagens::findOrFail($pedido->pedidos_imagens[0]->id);
+                $pedido_imagem->update([
+                    'imagem' => "$imagem_path/$novo_nome",
+                    'capa' => "$capa_path/$novo_nome"
+                ]);
+            } else {
+                $pedidos_imagens = new PedidosImagens([
+                    'pedido_id' => $pedido->id,
+                    'imagem' => "$imagem_path/$novo_nome",
+                    'capa' => "$capa_path/$novo_nome"
+                ]);
+                $pedidos_imagens->save();
+            }
+        }
+
         return redirect('/pedidos');
     }
 
     public function destroy(int $id): RedirectResponse {
         $pedido = Pedido::findOrFail($id);
+
+        if (count($pedido->pedidos_imagens) > 0) {
+            unlink($pedido->pedidos_imagens[0]->imagem);
+            // unlink($pedido->pedidos_imagens[0]->capa);
+            $pedido_imagem = PedidosImagens::findOrFail($pedido->pedidos_imagens[0]->id);
+            $pedido_imagem->delete();
+        } 
 
         $pedido->delete();
 

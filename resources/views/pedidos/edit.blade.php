@@ -4,9 +4,16 @@
 @section('titulo', 'Editar Pedido')
 
 @section('conteudo')
-    <form action="{{ route('pedidos.update', $pedido) }}" method="POST">
+    <form action="{{ route('pedidos.update', $pedido) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
+        <div class="mb-3">
+            <label for="imagem" class="form-label">Imagem</label><br>
+            @if (count($pedido->pedidos_imagens) > 0)
+            <a href="/{{ $pedido->pedidos_imagens[0]->imagem }}" target="_blank">Uploaded Imagem</a><br>
+            @endif
+            <input type="file" class="form-control-file" id="imagem" name="imagem">
+        </div>
         <div class="mb-3">
             <label for="produto" class="form-label">Produto</label>
             <input type="text" value="{{ $pedido->produto }}" class="form-control" id="produto" name="produto" placeholder="Digite o produto" required>

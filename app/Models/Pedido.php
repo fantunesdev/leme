@@ -29,4 +29,13 @@ class Pedido extends Model
     public function pedido_status() {
         return $this->belongsTo(PedidoStatus::class);
     }
+
+    /**
+     * Relação com PedidosImagens
+     *
+     * @return void
+     */
+    public function pedidos_imagens() {
+        return $this->hasMany(PedidosImagens::class);
+    }
 }
