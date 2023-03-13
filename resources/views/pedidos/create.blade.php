@@ -24,6 +24,10 @@
             <input type="number" step="0.01" class="form-control" id="valor" name="valor" placeholder="0,00" required maxlength="11" minlength="11" value="{{ old('valor') }}">
         </div>
         <div class="mb-3">
+            <label for="data" class="form-label">Data</label>
+            <input type="datetime-local" class="form-control" id="data" name="data" required value="{{ old('data') }}">
+        </div>
+        <div class="mb-3">
             <label for="ativo" class="form-label">Ativo</label>
             <select class="form-control" name="ativo" id="ativo" required>
                 @foreach ($ativo_options as $key => $option)

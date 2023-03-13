@@ -55,7 +55,6 @@ class PedidoController extends Controller
      */
     public function store(Request $request, PedidoRequest $pedido_request): RedirectResponse {
         $dados = $request->except('_token');
-        $dados['data'] = date('Y-m-d H:i:s');
         
         $pedido = Pedido::create($dados);
 
@@ -167,6 +166,7 @@ class PedidoController extends Controller
         $pedido->update([
             'produto' => $request->produto,
             'valor' => $request->valor,
+            'data' => $request->data,
             'ativo' => $request->ativo,
             'cliente_id' => $request->cliente_id,
             'pedido_status_id' => $request->pedido_status_id
