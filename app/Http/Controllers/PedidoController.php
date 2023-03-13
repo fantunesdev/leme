@@ -10,6 +10,7 @@ use App\Models\PedidoStatus;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Nette\Utils\Arrays;
 
 class PedidoController extends Controller
 {
@@ -39,27 +40,56 @@ class PedidoController extends Controller
     public function store(Request $request, PedidoRequest $pedido_request) {
         $dados = $request->except('_token');
         $dados['data'] = date('Y-m-d H:i:s');
-
+        
         $pedido = Pedido::create($dados);
 
         if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
-            $request_imagem = $request->imagem;
-            $nome_original = pathinfo($request_imagem->getClientOriginalName(), PATHINFO_FILENAME);
-            $extensao = pathinfo($request_imagem->getClientOriginalName(), PATHINFO_EXTENSION);
-            $novo_nome = md5($nome_original . strtotime('now')) . '.' . $extensao;
-            $imagem_path = 'img/pedidos/imagem';
-            $capa_path = 'img/pedidos/capa';
-            $request_imagem->move($imagem_path, $novo_nome);
+            $caminho = 'img/pedidos';
+            
+            list($nome, $extensao) = $this->obter_novo_nome($request);
+            
+            $this->salvar_imagem($request, $nome, $extensao, $caminho);
+            $this->criar_capa($nome, $extensao, $caminho);
+
+            $caminho_imagem_str = "$caminho/$nome.$extensao";
+            $caminho_capa_str = "$caminho/$nome-capa.$extensao";
 
             $pedidos_imagens = new PedidosImagens([
                 'pedido_id' => $pedido->id,
-                'imagem' => "$imagem_path/$novo_nome",
-                'capa' => "$capa_path/$novo_nome"
+                'imagem' => $caminho_imagem_str,
+                'capa' => $caminho_capa_str
             ]);
             $pedidos_imagens->save();
         }
 
         return redirect('/pedidos');
+    }
+
+    private function obter_novo_nome(Request $request): Array {
+        $request_imagem = $request->imagem;
+        $nome_original = pathinfo($request_imagem->getClientOriginalName(), PATHINFO_FILENAME);
+        $extensao = pathinfo($request_imagem->getClientOriginalName(), PATHINFO_EXTENSION);
+        $novo_nome = md5($nome_original . strtotime('now'));
+        return [$novo_nome, $extensao];
+    }
+
+    private function salvar_imagem(Request $request, String $nome, String $extensao, String $path) {
+        $request_imagem = $request->imagem;
+        $request_imagem->move($path, "$nome.$extensao");
+    }
+
+    private function criar_capa(String $nome, String $extensao, String $path) {
+        $arquivo = "$path/$nome.$extensao";
+        
+        list($largura, $altura) = getimagesize($arquivo);
+        $nova_largura = 100;
+        $nova_altura = 90;
+
+        $nova_imagem = imagecreatetruecolor($nova_largura, $nova_altura);
+        $fonte = imagecreatefromjpeg($arquivo);
+        imagecopyresized($nova_imagem, $fonte, 0, 0, 0, 0, $nova_largura, $nova_altura, $largura, $altura);
+        $novo_arquivo = "$path/$nome-capa.$extensao";
+        imagejpeg($nova_imagem, $novo_arquivo);
     }
 
     public function edit(int $id): View {
@@ -91,27 +121,29 @@ class PedidoController extends Controller
         ]);
 
         if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
-            $request_imagem = $request->imagem;
-            $nome_original = pathinfo($request_imagem->getClientOriginalName(), PATHINFO_FILENAME);
-            $extensao = pathinfo($request_imagem->getClientOriginalName(), PATHINFO_EXTENSION);
-            $novo_nome = md5($nome_original . strtotime('now')) . '.' . $extensao;
-            $imagem_path = 'img/pedidos/imagem';
-            $capa_path = 'img/pedidos/capa';
-            $request_imagem->move($imagem_path, $novo_nome);
+            $caminho = 'img/pedidos';
+            
+            list($nome, $extensao) = $this->obter_novo_nome($request);
+            
+            $this->salvar_imagem($request, $nome, $extensao, $caminho);
+            $this->criar_capa($nome, $extensao, $caminho);
+
+            $caminho_imagem_str = "$caminho/$nome.$extensao";
+            $caminho_capa_str = "$caminho/$nome-capa.$extensao";
             
             if (count($pedido->pedidos_imagens) > 0) {
                 unlink($pedido->pedidos_imagens[0]->imagem);
-                // unlink($pedido->pedidos_imagens[0]->capa);
+                unlink($pedido->pedidos_imagens[0]->capa);
                 $pedido_imagem = PedidosImagens::findOrFail($pedido->pedidos_imagens[0]->id);
                 $pedido_imagem->update([
-                    'imagem' => "$imagem_path/$novo_nome",
-                    'capa' => "$capa_path/$novo_nome"
+                    'imagem' => "$caminho_imagem_str",
+                    'capa' => "$caminho_capa_str"
                 ]);
             } else {
                 $pedidos_imagens = new PedidosImagens([
                     'pedido_id' => $pedido->id,
-                    'imagem' => "$imagem_path/$novo_nome",
-                    'capa' => "$capa_path/$novo_nome"
+                    'imagem' => $caminho_imagem_str,
+                    'capa' => $caminho_capa_str
                 ]);
                 $pedidos_imagens->save();
             }
@@ -125,7 +157,7 @@ class PedidoController extends Controller
 
         if (count($pedido->pedidos_imagens) > 0) {
             unlink($pedido->pedidos_imagens[0]->imagem);
-            // unlink($pedido->pedidos_imagens[0]->capa);
+            unlink($pedido->pedidos_imagens[0]->capa);
             $pedido_imagem = PedidosImagens::findOrFail($pedido->pedidos_imagens[0]->id);
             $pedido_imagem->delete();
         } 

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\Ativo;
+use App\Rules\Imagem;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PedidoRequest extends FormRequest
@@ -26,7 +27,8 @@ class PedidoRequest extends FormRequest
         return [
             'produto' => ['required'],
             'valor' => ['required','numeric'],
-            'ativo' => ['required', new Ativo]
+            'ativo' => ['required', new Ativo],
+            'imagem' => [new Imagem, 'image']
         ];
     }
 }
