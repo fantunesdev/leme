@@ -10,10 +10,14 @@ use App\Models\PedidoStatus;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Nette\Utils\Arrays;
 
 class PedidoController extends Controller
 {
+    /**
+     * Lista os pedidos
+     *
+     * @return View
+     */
     public function index(): View {
         $pedidos = Pedido::get();
 
@@ -22,6 +26,11 @@ class PedidoController extends Controller
         ]);
     }
 
+    /**
+     * Renderiza o formulário de cadastro de pedidos
+     *
+     * @return View
+     */
     public function create(): View {
         $clientes = Cliente::get();
         $pedidos_status = PedidoStatus::get();
@@ -37,7 +46,14 @@ class PedidoController extends Controller
         ]);
     }
 
-    public function store(Request $request, PedidoRequest $pedido_request) {
+    /**
+     * Grava os dados do formulário de Pedidos no banco de dados
+     *
+     * @param Request $request
+     * @param PedidoRequest $pedido_request
+     * @return void
+     */
+    public function store(Request $request, PedidoRequest $pedido_request): RedirectResponse {
         $dados = $request->except('_token');
         $dados['data'] = date('Y-m-d H:i:s');
         
@@ -65,6 +81,12 @@ class PedidoController extends Controller
         return redirect('/pedidos');
     }
 
+    /**
+     * Cria um novo nome único para a imagem
+     *
+     * @param Request $request
+     * @return Array
+     */
     private function obter_novo_nome(Request $request): Array {
         $request_imagem = $request->imagem;
         $nome_original = pathinfo($request_imagem->getClientOriginalName(), PATHINFO_FILENAME);
@@ -73,12 +95,29 @@ class PedidoController extends Controller
         return [$novo_nome, $extensao];
     }
 
-    private function salvar_imagem(Request $request, String $nome, String $extensao, String $path) {
+    /**
+     * Salva a imagem na pasta /public/img/pedidos
+     *
+     * @param Request $request
+     * @param String $nome
+     * @param String $extensao
+     * @param String $path
+     * @return void
+     */
+    private function salvar_imagem(Request $request, String $nome, String $extensao, String $path): Void {
         $request_imagem = $request->imagem;
         $request_imagem->move($path, "$nome.$extensao");
     }
 
-    private function criar_capa(String $nome, String $extensao, String $path) {
+    /**
+     * Copia a imagem, redimensiona e salva na pasta /public/img/pedidos
+     *
+     * @param String $nome
+     * @param String $extensao
+     * @param String $path
+     * @return void
+     */
+    private function criar_capa(String $nome, String $extensao, String $path): Void {
         $arquivo = "$path/$nome.$extensao";
         
         list($largura, $altura) = getimagesize($arquivo);
@@ -92,6 +131,12 @@ class PedidoController extends Controller
         imagejpeg($nova_imagem, $novo_arquivo);
     }
 
+    /**
+     * Renderiza o formulário de pedidos para edição
+     *
+     * @param integer $id
+     * @return View
+     */
     public function edit(int $id): View {
         $pedido = Pedido::find($id);
         $clientes = Cliente::get();
@@ -109,7 +154,14 @@ class PedidoController extends Controller
         ]);
     }
 
-    public function update(int $id, Request $request) {
+    /**
+     * Salva as alterações do formulário de pedidos no banco de dados
+     *
+     * @param integer $id
+     * @param Request $request
+     * @return void
+     */
+    public function update(int $id, Request $request): RedirectResponse {
         $pedido = Pedido::findOrFail($id);
 
         $pedido->update([
@@ -152,6 +204,12 @@ class PedidoController extends Controller
         return redirect('/pedidos');
     }
 
+    /**
+     * Apaga o registro de pedidos do banco de dados e seus respectivos arquivos
+     *
+     * @param integer $id
+     * @return RedirectResponse
+     */
     public function destroy(int $id): RedirectResponse {
         $pedido = Pedido::findOrFail($id);
 
@@ -167,6 +225,11 @@ class PedidoController extends Controller
         return redirect('/pedidos');
     }
 
+    /**
+     * Exporta os pedidos para arquivo csv.
+     *
+     * @return void
+     */
     public function export_csv() {
         $arquivo = 'pedidos.csv';
         $pedidos = Pedido::all();
