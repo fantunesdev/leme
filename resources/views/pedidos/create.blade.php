@@ -25,7 +25,7 @@
         </div>
         <div class="mb-3">
             <label for="valor" class="form-label">Valor</label>
-            <input type="number" step="0.01" class="form-control" id="valor" name="valor" placeholder="0,00" required maxlength="11" minlength="11" value="{{ old('produto') }}">
+            <input type="number" step="0.01" class="form-control" id="valor" name="valor" placeholder="0,00" required maxlength="11" minlength="11" value="{{ old('valor') }}">
         </div>
         <div class="mb-3">
             <label for="ativo" class="form-label">Ativo</label>

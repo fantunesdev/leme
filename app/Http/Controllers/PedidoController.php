@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PedidoRequest;
 use App\Models\Cliente;
 use App\Models\Pedido;
 use App\Models\PedidosImagens;
@@ -35,7 +36,7 @@ class PedidoController extends Controller
         ]);
     }
 
-    public function store(Request $request) {
+    public function store(Request $request, PedidoRequest $pedido_request) {
         $dados = $request->except('_token');
         $dados['data'] = date('Y-m-d H:i:s');
 

@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Rules\Ativo;
-use App\Rules\ClienteNome;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ClienteRequest extends FormRequest
+class PedidoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,11 +22,10 @@ class ClienteRequest extends FormRequest
      */
     public function rules(): array
     {
-        $hoje = date('Y-m-d');
+
         return [
-            'nome' => ['required', 'string', new ClienteNome],
-            'cpf' => ['required', 'min:11', 'max:11'],
-            'data_nasc' => ['required', 'date', "before:$hoje"],
+            'produto' => ['required'],
+            'valor' => ['required','numeric'],
             'ativo' => ['required', new Ativo]
         ];
     }
